@@ -121,6 +121,16 @@ rule-providers:
   
  # 分流Policy 
 rules:
+  - DOMAIN-KEYWORD,zhinianblog,DIRECT
+  - PROCESS-NAME,onedrive,DIRECT
+  - DOMAIN-SUFFIX,fao.org,DIRECT
+  - PROCESS-NAME,WeChat,DIRECT
+  - DOMAIN-KEYWORD,huggingface,🌏 全球加速
+  - DOMAIN-KEYWORD,googleapis,🇯🇵 日本节点
+  - PROCESS-NAME,zotero,DIRECT
+  - DOMAIN-KEYWORD,sciencedirectassets,DIRECT
+  - DOMAIN-KEYWORD,sciencedirect,DIRECT
+  - DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点
   - DOMAIN-KEYWORD,steampipe,DIRECT
   - DOMAIN-KEYWORD,steamcontent,DIRECT
   - DOMAIN-KEYWORD,qinglin,DIRECT
