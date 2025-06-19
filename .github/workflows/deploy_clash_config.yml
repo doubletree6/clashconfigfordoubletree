@@ -16,7 +16,13 @@ jobs:
 
       - name: Replace placeholder with secret URL
         run: |
-          sed "s|{{ SECRET_SUBSCRIPTION_URL }}|${{ secrets.CLASH_SUBSCRIPTION_URL }}|g" clash_config_template.yaml > clash_config.yaml
+          ESCAPED_URL=$(printf %s "${CLASH_SUBSCRIPTION_URL}" | sed -e 's/[\/&]/\\&/g')
+          sed "s|{{ SECRET_SUBSCRIPTION_URL }}|${ESCAPED_URL}|g" clash_config_template.yaml > clash_config.yaml
+        env:
+          CLASH_SUBSCRIPTION_URL: ${{ secrets.CLASH_SUBSCRIPTION_URL }}
+      - name: Verify generated config
+        run: |
+          cat clash_config.yaml
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
