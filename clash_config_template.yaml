@@ -10,6 +10,7 @@
 # @Thanks            @blackmatrix7, @Fndroid, @Anti
 # @Attention         Please use the latest version of ClashforWindows
 # @ConfigVersion     1.0.21
+# v1
 #==========================================
 
 port: 7890           # HTTP 代理端口
