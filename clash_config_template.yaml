@@ -121,7 +121,7 @@ rule-providers:
   
  # 分流Policy 
 rules:
-  _ DOMAIN-KEYWORD,copilot,♻️ 自动选择
+  _ DOMAIN-KEYWORD,copilot,🌏 全球加速
   - DOMAIN-KEYWORD,tailscale,DIRECT
   - DOMAIN-KEYWORD,zhinianblog,DIRECT
   - PROCESS-NAME,onedrive,DIRECT
