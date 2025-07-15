@@ -121,6 +121,9 @@ rule-providers:
   
  # 分流Policy 
 rules:
+  - DOMAIN-KEYWORD,mtalk,DIRECT
+  - DOMAIN-KEYWORD,intlgame,🚀 手动切换
+  - DOMAIN-KEYWORD,nikke,🚀 手动切换
   - DOMAIN-KEYWORD,copilot,🌏 全球加速
   - DOMAIN-KEYWORD,zerotier,DIRECT
   - DOMAIN-KEYWORD,tailscale,DIRECT
@@ -129,7 +132,7 @@ rules:
   - DOMAIN-SUFFIX,fao.org,DIRECT
   - PROCESS-NAME,WeChat,DIRECT
   - DOMAIN-KEYWORD,huggingface,🌏 全球加速
-  - DOMAIN-KEYWORD,googleapis,🇯🇵 日本节点
+  - DOMAIN-KEYWORD,googleapis,🚀 手动切换
   - PROCESS-NAME,zotero,DIRECT
   - DOMAIN-KEYWORD,sciencedirectassets,DIRECT
   - DOMAIN-KEYWORD,sciencedirect,DIRECT
