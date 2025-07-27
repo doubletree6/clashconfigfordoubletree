@@ -122,7 +122,7 @@ rule-providers:
   
  # 分流Policy 
 rules:
-  - DOMAIN-KEYWORD,mtalk,DIRECT
+  - DOMAIN-KEYWORD,mtalk,🚀 手动切换
   - DOMAIN-KEYWORD,intlgame,🚀 手动切换
   - DOMAIN-KEYWORD,nikke,🚀 手动切换
   - DOMAIN-KEYWORD,copilot,🌏 全球加速
