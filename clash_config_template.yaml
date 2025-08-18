@@ -122,6 +122,8 @@ rule-providers:
   
  # 分流Policy 
 rules:
+  - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
+  - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
   - DOMAIN-KEYWORD,mtalk,🚀 手动切换
   - DOMAIN-KEYWORD,intlgame,🚀 手动切换
   - DOMAIN-KEYWORD,nikke,🚀 手动切换
@@ -129,11 +131,13 @@ rules:
   - DOMAIN-KEYWORD,zerotier,DIRECT
   - DOMAIN-KEYWORD,tailscale,DIRECT
   - DOMAIN-KEYWORD,zhinianblog,DIRECT
-  - PROCESS-NAME,onedrive,DIRECT
-  - DOMAIN-SUFFIX,fao.org,DIRECT
-  - PROCESS-NAME,WeChat,DIRECT
   - DOMAIN-KEYWORD,huggingface,🌏 全球加速
   - DOMAIN-KEYWORD,googleapis,🚀 手动切换
+  - PROCESS-NAME,onedrive,DIRECT
+  - PROCESS-NAME,O+Connect,DIRECT
+  - PROCESS-NAME,docker,DIRECT
+  - DOMAIN-SUFFIX,fao.org,DIRECT
+  - PROCESS-NAME,WeChat,DIRECT
   - PROCESS-NAME,zotero,DIRECT
   - DOMAIN-KEYWORD,sciencedirectassets,DIRECT
   - DOMAIN-KEYWORD,sciencedirect,DIRECT
