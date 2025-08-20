@@ -124,7 +124,7 @@ rule-providers:
 rules:
 
   - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
-  - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
+  - DOMAIN-KEYWORD,cline,🚀 手动切换
   - DOMAIN-KEYWORD,mtalk,🚀 手动切换
   - DOMAIN-KEYWORD,intlgame,🚀 手动切换
   - DOMAIN-KEYWORD,nikke,🚀 手动切换
