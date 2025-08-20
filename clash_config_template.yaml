@@ -122,6 +122,7 @@ rule-providers:
   
  # 分流Policy 
 rules:
+
   - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
   - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
   - DOMAIN-KEYWORD,mtalk,🚀 手动切换
@@ -129,6 +130,7 @@ rules:
   - DOMAIN-KEYWORD,nikke,🚀 手动切换
   - DOMAIN-KEYWORD,copilot,🌏 全球加速
   - DOMAIN-KEYWORD,zerotier,DIRECT
+  - DOMAIN-KEYWORD,hash070,DIRECT #Ohmaygpt
   - DOMAIN-KEYWORD,tailscale,DIRECT
   - DOMAIN-KEYWORD,zhinianblog,DIRECT
   - DOMAIN-KEYWORD,huggingface,🌏 全球加速
