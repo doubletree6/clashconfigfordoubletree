@@ -94,11 +94,12 @@ proxy-groups:
   
 #节点分组
   - {name: ♻️ 自动选择, <<: *a4}
-  - {name: 🇭🇰 香港节点, <<: *a4, filter: "港|HK|(?i)Hong"           }             # a4更改为a2，即为手动选择
-  - {name: 🇯🇵 日本节点, <<:  *a4, filter: "日|东京|JP|(?i)Japan"     }             # a4更改为a2，即为手动选择     
-  - {name: 🇨🇳 台湾节点, <<: *a4, filter: "台|湾|TW|(?i)Taiwan"      }             # a4更改为a2，即为手动选择
-  - {name: 🇺🇲 美国节点, <<: *a4, filter: "美|US|(?i)States|American"}             # a4更改为a2，即为手动选择
-  - {name: 🇸🇬 狮城节点, <<: *a4, filter: "新|坡|SG|(?i)Singapore"    }            # a4更改为a2，即为手动选择
+  - {name: 🇭🇰 香港节点, <<: *a4, filter: "港|HK|(?i)Hong"           }
+  - {name: 🇯🇵 日本节点, <<:  *a4, filter: "日|东京|JP|(?i)Japan"     }
+  - {name: 🇨🇳 台湾节点, <<: *a4, filter: "台|湾|TW|(?i)Taiwan"      }
+  - {name: 🇺🇲 美国节点, <<: *a4, filter: "美|US|(?i)States|American"}
+  - {name: 🇸🇬 狮城节点, <<: *a4, filter: "新|坡|SG|(?i)Singapore"    }
+  - {name: 🪩Frpservice, type: select, proxies: [DIRECT, "🇭🇰 香港节点", "🚀 手动切换"]}
 
 # 分流规则 
 rule-providers:
@@ -133,7 +134,7 @@ rules:
   - DOMAIN-KEYWORD,zerotier,DIRECT
   - DOMAIN-KEYWORD,hash070,DIRECT #Ohmaygpt
   - DOMAIN-KEYWORD,tailscale,DIRECT
-  - DOMAIN-KEYWORD,zhinianblog,DIRECT
+  - DOMAIN-KEYWORD,zhinianblog,🪩Frpservice
   - DOMAIN-KEYWORD,huggingface,🌏 全球加速
   - DOMAIN-KEYWORD,googleapis,🚀 手动切换
   - PROCESS-NAME,onedrive,DIRECT
