@@ -125,6 +125,7 @@ rule-providers:
 rules:
 
   - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
+  - DOMAIN-KEYWORD,edisonscientific,🌏 全球加速
   - DOMAIN-KEYWORD,ohmygpt,🚀 手动切换
   - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
   - DOMAIN-KEYWORD,mtalk,🚀 手动切换
