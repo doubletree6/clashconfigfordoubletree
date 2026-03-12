@@ -24,6 +24,9 @@ mode: rule           # 规则模式
 log-level: info      # 日志级别
 ipv6: false          # IPV6开关
 external-controller: 127.0.0.1:9090
+# mihomo/clash 配置加入：
+inet4-route-exclude-address:
+  - 100.64.0.0/10   # Tailscale IP 段直接绕过 TUN
 
 dns:
   enable: true       # 不使用系统 DNS
@@ -136,7 +139,8 @@ rules:
   - DOMAIN-KEYWORD,copilot,🌏 全球加速
   - DOMAIN-KEYWORD,zerotier,DIRECT
   - DOMAIN-KEYWORD,hash070,DIRECT #Ohmaygpt
-  - DOMAIN-KEYWORD,tailscale,DIRECT
+  - IP-CIDR,100.64.0.0/10,DIRECT
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
   - DOMAIN-KEYWORD,zhinianblog,🪩Frpservice
   - DOMAIN-KEYWORD,huggingface,🌏 全球加速
   - DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点
