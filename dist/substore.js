@@ -584,8 +584,8 @@ function buildProxyGroups({
     {
       name: PROXY_GROUPS.MANUAL,
       icon: "https://gcore.jsdelivr.net/gh/shindgewongxj/WHATSINStash@master/icon/select.png",
-      "include-all": true,
-      type: "select"
+      type: "select",
+      use: ["Subscribe"]
     },
     
     // ========== 自定义扩展：♻️ 自动选择 ==========
