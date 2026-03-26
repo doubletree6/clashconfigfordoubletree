@@ -1,0 +1,181 @@
+# Clash 配置文件
+# 由 build.js 自动生成
+
+port: 7890
+socks-port: 7891
+mixed-port: 7893
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+ipv6: false
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  fallback:
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+
+proxy-providers:
+  Subscribe:
+    type: http
+    interval: 86400
+    url: YOUR_SUBSCRIPTION_URL
+    path: ./proxy_providers/tmp.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 1800
+
+proxies: null
+
+proxy-groups:
+  - name: 🚀 手动切换
+    type: select
+    use:
+      - Subscribe
+  - name: ♻️ 自动选择
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+  - name: 🌏 全球加速
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - DIRECT
+  - name: 🇭🇰 香港节点
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+    filter: "港|HK|(?i)Hong"
+  - name: 🇯🇵 日本节点
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+    filter: "日|东京|JP|(?i)Japan"
+  - name: 🇺🇲 美国节点
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+    filter: "美|US|(?i)States|American"
+  - name: 🇨🇳 台湾节点
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+    filter: "台|湾|TW|(?i)Taiwan"
+  - name: 🇸🇬 狮城节点
+    type: url-test
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    use:
+      - Subscribe
+    filter: "新|坡|SG|(?i)Singapore"
+  - name: 🪩Frpservice
+    type: select
+    proxies:
+      - DIRECT
+      - 🇭🇰 香港节点
+      - 🚀 手动切换
+  - name: 🐟 兜底分流
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - DIRECT
+
+rule-providers:
+  Direct:
+    type: http
+    behavior: domain
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Direct/Direct.yaml
+    path: ./ruleset/Direct.yaml
+  Lan:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Lan/Lan.yaml
+    path: ./ruleset/Lan.yaml
+  Ad:
+    type: http
+    behavior: domain
+    interval: 86400
+    url: https://gcore.jsdelivr.net/gh/217heidai/adblockfilters@main/rules/adblockmihomolite.yaml
+    path: ./ruleset/adblock_reject.yaml
+  ProxyLite:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/ProxyLite/ProxyLite.yaml
+    path: ./ruleset/ProxyLite.yaml
+  ChinaIP:
+    type: http
+    behavior: ipcidr
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/soffchen/GeoIP2-CN@release/clash-rule-provider.yml
+    path: ./ruleset/ChinaIP.yaml
+
+rules:
+  - DOMAIN-SUFFIX,tailscale.com,DIRECT
+  - IP-CIDR,100.64.0.0/10,DIRECT
+  - DOMAIN-KEYWORD,qinglin,DIRECT
+  - DOMAIN-KEYWORD,volcengine,DIRECT
+  - DOMAIN-SUFFIX,follow.is,DIRECT
+  - DOMAIN-SUFFIX,acs.org,DIRECT
+  - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
+  - DOMAIN-KEYWORD,aistudio,🌏 全球加速
+  - DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点
+  - DOMAIN-KEYWORD,ohmygpt,🚀 手动切换
+  - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
+  - DOMAIN-KEYWORD,huggingface,🌏 全球加速
+  - DOMAIN-KEYWORD,google,🇸🇬 狮城节点
+  - DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点
+  - DOMAIN-KEYWORD,copilot,🌏 全球加速
+  - DOMAIN-KEYWORD,intlgame,🚀 手动切换
+  - DOMAIN-KEYWORD,nikke,🚀 手动切换
+  - DOMAIN-KEYWORD,mtalk,🚀 手动切换
+  - DOMAIN-KEYWORD,zerotier,DIRECT
+  - DOMAIN-KEYWORD,hash070,DIRECT
+  - DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点
+  - DOMAIN-KEYWORD,steampipe,DIRECT
+  - DOMAIN-KEYWORD,steamcontent,DIRECT
+  - DOMAIN-KEYWORD,sciencedirect,DIRECT
+  - DOMAIN-KEYWORD,sciencedirectassets,DIRECT
+  - DOMAIN-SUFFIX,fao.org,DIRECT
+  - PROCESS-NAME,onedrive,DIRECT
+  - PROCESS-NAME,O+Connect,DIRECT
+  - PROCESS-NAME,docker,DIRECT
+  - PROCESS-NAME,WeChat,DIRECT
+  - PROCESS-NAME,zotero,DIRECT
+  - DOMAIN-KEYWORD,zhinianblog,🪩Frpservice
+  - RULE-SET,Direct,DIRECT
+  - RULE-SET,Lan,DIRECT
+  - RULE-SET,Ad,REJECT
+  - RULE-SET,ProxyLite,🌏 全球加速
+  - RULE-SET,ChinaIP,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,🐟 兜底分流
