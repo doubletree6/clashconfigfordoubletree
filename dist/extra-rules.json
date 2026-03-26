@@ -1,0 +1,235 @@
+{
+  "total": 32,
+  "bypass": [
+    {
+      "type": "DOMAIN-SUFFIX",
+      "value": "tailscale.com",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-SUFFIX,tailscale.com,DIRECT"
+    },
+    {
+      "type": "IP-CIDR",
+      "value": "100.64.0.0/10",
+      "policy": "DIRECT",
+      "raw": "IP-CIDR,100.64.0.0/10,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "qinglin",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,qinglin,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "volcengine",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,volcengine,DIRECT"
+    },
+    {
+      "type": "DOMAIN-SUFFIX",
+      "value": "follow.is",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-SUFFIX,follow.is,DIRECT"
+    },
+    {
+      "type": "DOMAIN-SUFFIX",
+      "value": "acs.org",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-SUFFIX,acs.org,DIRECT"
+    }
+  ],
+  "custom": [
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "generativelanguage",
+      "policy": "🚀 手动切换",
+      "raw": "DOMAIN-KEYWORD,generativelanguage,🚀 手动切换"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "aistudio",
+      "policy": "🌏 全球加速",
+      "raw": "DOMAIN-KEYWORD,aistudio,🌏 全球加速"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "edisonscientific",
+      "policy": "🇺🇲 美国节点",
+      "raw": "DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "ohmygpt",
+      "policy": "🚀 手动切换",
+      "raw": "DOMAIN-KEYWORD,ohmygpt,🚀 手动切换"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "cline",
+      "policy": "🇯🇵 日本节点",
+      "raw": "DOMAIN-KEYWORD,cline,🇯🇵 日本节点"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "huggingface",
+      "policy": "🌏 全球加速",
+      "raw": "DOMAIN-KEYWORD,huggingface,🌏 全球加速"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "google",
+      "policy": "🇸🇬 狮城节点",
+      "raw": "DOMAIN-KEYWORD,google,🇸🇬 狮城节点"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "googleapis",
+      "policy": "🇸🇬 狮城节点",
+      "raw": "DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "copilot",
+      "policy": "🌏 全球加速",
+      "raw": "DOMAIN-KEYWORD,copilot,🌏 全球加速"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "intlgame",
+      "policy": "🚀 手动切换",
+      "raw": "DOMAIN-KEYWORD,intlgame,🚀 手动切换"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "nikke",
+      "policy": "🚀 手动切换",
+      "raw": "DOMAIN-KEYWORD,nikke,🚀 手动切换"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "mtalk",
+      "policy": "🚀 手动切换",
+      "raw": "DOMAIN-KEYWORD,mtalk,🚀 手动切换"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "zerotier",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,zerotier,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "hash070",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,hash070,DIRECT"
+    },
+    {
+      "type": "DOMAIN-SUFFIX",
+      "value": "apple-relay.apple.com",
+      "policy": "🇺🇲 美国节点",
+      "raw": "DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "steampipe",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,steampipe,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "steamcontent",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,steamcontent,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "sciencedirect",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,sciencedirect,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "sciencedirectassets",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,sciencedirectassets,DIRECT"
+    },
+    {
+      "type": "DOMAIN-SUFFIX",
+      "value": "fao.org",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-SUFFIX,fao.org,DIRECT"
+    },
+    {
+      "type": "PROCESS-NAME",
+      "value": "onedrive",
+      "policy": "DIRECT",
+      "raw": "PROCESS-NAME,onedrive,DIRECT"
+    },
+    {
+      "type": "PROCESS-NAME",
+      "value": "O+Connect",
+      "policy": "DIRECT",
+      "raw": "PROCESS-NAME,O+Connect,DIRECT"
+    },
+    {
+      "type": "PROCESS-NAME",
+      "value": "docker",
+      "policy": "DIRECT",
+      "raw": "PROCESS-NAME,docker,DIRECT"
+    },
+    {
+      "type": "PROCESS-NAME",
+      "value": "WeChat",
+      "policy": "DIRECT",
+      "raw": "PROCESS-NAME,WeChat,DIRECT"
+    },
+    {
+      "type": "PROCESS-NAME",
+      "value": "zotero",
+      "policy": "DIRECT",
+      "raw": "PROCESS-NAME,zotero,DIRECT"
+    }
+  ],
+  "proxy": [
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "zhinianblog",
+      "policy": "🪩Frpservice",
+      "raw": "DOMAIN-KEYWORD,zhinianblog,🪩Frpservice"
+    }
+  ],
+  "clashRules": [
+    "DOMAIN-SUFFIX,tailscale.com,DIRECT",
+    "IP-CIDR,100.64.0.0/10,DIRECT",
+    "DOMAIN-KEYWORD,qinglin,DIRECT",
+    "DOMAIN-KEYWORD,volcengine,DIRECT",
+    "DOMAIN-SUFFIX,follow.is,DIRECT",
+    "DOMAIN-SUFFIX,acs.org,DIRECT",
+    "DOMAIN-KEYWORD,generativelanguage,🚀 手动切换",
+    "DOMAIN-KEYWORD,aistudio,🌏 全球加速",
+    "DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点",
+    "DOMAIN-KEYWORD,ohmygpt,🚀 手动切换",
+    "DOMAIN-KEYWORD,cline,🇯🇵 日本节点",
+    "DOMAIN-KEYWORD,huggingface,🌏 全球加速",
+    "DOMAIN-KEYWORD,google,🇸🇬 狮城节点",
+    "DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点",
+    "DOMAIN-KEYWORD,copilot,🌏 全球加速",
+    "DOMAIN-KEYWORD,intlgame,🚀 手动切换",
+    "DOMAIN-KEYWORD,nikke,🚀 手动切换",
+    "DOMAIN-KEYWORD,mtalk,🚀 手动切换",
+    "DOMAIN-KEYWORD,zerotier,DIRECT",
+    "DOMAIN-KEYWORD,hash070,DIRECT",
+    "DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点",
+    "DOMAIN-KEYWORD,steampipe,DIRECT",
+    "DOMAIN-KEYWORD,steamcontent,DIRECT",
+    "DOMAIN-KEYWORD,sciencedirect,DIRECT",
+    "DOMAIN-KEYWORD,sciencedirectassets,DIRECT",
+    "DOMAIN-SUFFIX,fao.org,DIRECT",
+    "PROCESS-NAME,onedrive,DIRECT",
+    "PROCESS-NAME,O+Connect,DIRECT",
+    "PROCESS-NAME,docker,DIRECT",
+    "PROCESS-NAME,WeChat,DIRECT",
+    "PROCESS-NAME,zotero,DIRECT",
+    "DOMAIN-KEYWORD,zhinianblog,🪩Frpservice"
+  ]
+}
