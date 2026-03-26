@@ -1,0 +1,12 @@
+# 直连规则列表
+# 格式: RULE,策略组
+
+# Tailscale
+DOMAIN-SUFFIX,tailscale.com,DIRECT
+IP-CIDR,100.64.0.0/10,DIRECT
+
+# 自定义直连
+DOMAIN-KEYWORD,qinglin,DIRECT
+DOMAIN-KEYWORD,volcengine,DIRECT
+DOMAIN-SUFFIX,follow.is,DIRECT
+DOMAIN-SUFFIX,acs.org,DIRECT

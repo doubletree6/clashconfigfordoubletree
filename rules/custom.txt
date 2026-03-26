@@ -1,0 +1,37 @@
+# 自定义规则列表
+# 格式: RULE,策略组
+
+# AI 相关
+DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
+DOMAIN-KEYWORD,aistudio,🌏 全球加速
+DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点
+DOMAIN-KEYWORD,ohmygpt,🚀 手动切换
+DOMAIN-KEYWORD,cline,🇯🇵 日本节点
+DOMAIN-KEYWORD,huggingface,🌏 全球加速
+
+# Google 服务
+DOMAIN-KEYWORD,google,🇸🇬 狮城节点
+DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点
+DOMAIN-KEYWORD,copilot,🌏 全球加速
+
+# 游戏
+DOMAIN-KEYWORD,intlgame,🚀 手动切换
+DOMAIN-KEYWORD,nikke,🚀 手动切换
+
+# 其他
+DOMAIN-KEYWORD,mtalk,🚀 手动切换
+DOMAIN-KEYWORD,zerotier,DIRECT
+DOMAIN-KEYWORD,hash070,DIRECT
+DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点
+DOMAIN-KEYWORD,steampipe,DIRECT
+DOMAIN-KEYWORD,steamcontent,DIRECT
+DOMAIN-KEYWORD,sciencedirect,DIRECT
+DOMAIN-KEYWORD,sciencedirectassets,DIRECT
+DOMAIN-SUFFIX,fao.org,DIRECT
+
+# 进程
+PROCESS-NAME,onedrive,DIRECT
+PROCESS-NAME,O+Connect,DIRECT
+PROCESS-NAME,docker,DIRECT
+PROCESS-NAME,WeChat,DIRECT
+PROCESS-NAME,zotero,DIRECT
