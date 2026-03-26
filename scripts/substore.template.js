@@ -4,7 +4,7 @@
  * 
  * 自定义功能：
  * - 新增「♻️ 自动选择」策略组（url-test 自动选择最快节点）
- * - 新增「🪩Frpservice」策略组（支持 DIRECT/香港/手动切换）
+ 
  * - 支持额外规则注入（在 MATCH 之前插入）
  * 
  * 支持的传入参数：
@@ -151,8 +151,7 @@ const PROXY_GROUPS = {
   DIRECT: "直连",
   LANDING: "落地节点",
   LOW_COST: "低倍率节点",
-  AUTO_SELECT: "♻️ 自动选择",
-  FRPSERVICE: "🪩Frpservice"
+  AUTO_SELECT: "♻️ 自动选择"
 };
 
 // ============================================================
@@ -309,10 +308,7 @@ const EXTRA_RULES = [
   
   // ========== 自定义代理规则 ==========
   "DOMAIN-KEYWORD,generativelanguage,🚀 手动切换",
-  "DOMAIN-KEYWORD,aistudio,🌏 全球加速",
-  
-  // ========== Frpservice 相关规则 ==========
-  "DOMAIN-KEYWORD,frp,🪩Frpservice"
+  "DOMAIN-KEYWORD,aistudio,🌏 全球加速"
 ];
 
 // ============================================================
@@ -754,15 +750,6 @@ function buildProxyGroups({
         : { proxies: lowCostNodes }
       )
     } : null,
-    
-    // ========== 自定义扩展：🪩Frpservice ==========
-    {
-      name: PROXY_GROUPS.FRPSERVICE,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png",
-      type: "select",
-      proxies: ["DIRECT", "🇭🇰 香港节点", "🚀 手动切换"]
-    },
-    // ========== 自定义扩展结束 ==========
     
     // 国家节点分组
     ...countryProxyGroups

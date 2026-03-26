@@ -94,12 +94,6 @@ proxy-groups:
     use:
       - Subscribe
     filter: "新|坡|SG|(?i)Singapore"
-  - name: 🪩Frpservice
-    type: select
-    proxies:
-      - DIRECT
-      - 🇭🇰 香港节点
-      - 🚀 手动切换
   - name: 🐟 兜底分流
     type: select
     proxies:
@@ -146,6 +140,7 @@ rules:
   - DOMAIN-KEYWORD,volcengine,DIRECT
   - DOMAIN-SUFFIX,follow.is,DIRECT
   - DOMAIN-SUFFIX,acs.org,DIRECT
+  - DOMAIN-KEYWORD,zhinianblog,DIRECT
   - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
   - DOMAIN-KEYWORD,aistudio,🌏 全球加速
   - DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点
@@ -171,7 +166,6 @@ rules:
   - PROCESS-NAME,docker,DIRECT
   - PROCESS-NAME,WeChat,DIRECT
   - PROCESS-NAME,zotero,DIRECT
-  - DOMAIN-KEYWORD,zhinianblog,🪩Frpservice
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Lan,DIRECT
   - RULE-SET,Ad,REJECT

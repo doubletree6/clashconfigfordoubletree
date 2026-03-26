@@ -1,5 +1,4 @@
 # 代理规则列表
 # 格式: RULE,策略组
 
-# 博客服务
-DOMAIN-KEYWORD,zhinianblog,🪩Frpservice
+# (暂无代理规则)

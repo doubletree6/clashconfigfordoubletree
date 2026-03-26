@@ -36,6 +36,12 @@
       "value": "acs.org",
       "policy": "DIRECT",
       "raw": "DOMAIN-SUFFIX,acs.org,DIRECT"
+    },
+    {
+      "type": "DOMAIN-KEYWORD",
+      "value": "zhinianblog",
+      "policy": "DIRECT",
+      "raw": "DOMAIN-KEYWORD,zhinianblog,DIRECT"
     }
   ],
   "custom": [
@@ -190,14 +196,7 @@
       "raw": "PROCESS-NAME,zotero,DIRECT"
     }
   ],
-  "proxy": [
-    {
-      "type": "DOMAIN-KEYWORD",
-      "value": "zhinianblog",
-      "policy": "🪩Frpservice",
-      "raw": "DOMAIN-KEYWORD,zhinianblog,🪩Frpservice"
-    }
-  ],
+  "proxy": [],
   "clashRules": [
     "DOMAIN-SUFFIX,tailscale.com,DIRECT",
     "IP-CIDR,100.64.0.0/10,DIRECT",
@@ -205,6 +204,7 @@
     "DOMAIN-KEYWORD,volcengine,DIRECT",
     "DOMAIN-SUFFIX,follow.is,DIRECT",
     "DOMAIN-SUFFIX,acs.org,DIRECT",
+    "DOMAIN-KEYWORD,zhinianblog,DIRECT",
     "DOMAIN-KEYWORD,generativelanguage,🚀 手动切换",
     "DOMAIN-KEYWORD,aistudio,🌏 全球加速",
     "DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点",
@@ -229,7 +229,6 @@
     "PROCESS-NAME,O+Connect,DIRECT",
     "PROCESS-NAME,docker,DIRECT",
     "PROCESS-NAME,WeChat,DIRECT",
-    "PROCESS-NAME,zotero,DIRECT",
-    "DOMAIN-KEYWORD,zhinianblog,🪩Frpservice"
+    "PROCESS-NAME,zotero,DIRECT"
   ]
 }

@@ -164,12 +164,6 @@ proxy-groups:
     use:
       - Subscribe
     filter: "新|坡|SG|(?i)Singapore"
-  - name: 🪩Frpservice
-    type: select
-    proxies:
-      - DIRECT
-      - 🇭🇰 香港节点
-      - 🚀 手动切换
   - name: 🐟 兜底分流
     type: select
     proxies:
