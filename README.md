@@ -4,10 +4,12 @@
 
 ## 输出产物
 
-| 文件 | 用途 | URL |
-|------|------|-----|
-| `substore.js` | Substore 订阅脚本 | `https://<username>.github.io/clashconfigfordoubletree/substore.js` |
-| `clash.yaml` | Clash 配置文件 | `https://<username>.github.io/clashconfigfordoubletree/clash.yaml` |
+| 文件 | 用途 | GitHub Pages | jsdelivr CDN (推荐) |
+|------|------|--------------|---------------------|
+| `substore.js` | Substore 脚本 | `https://doubletree6.github.io/clashconfigfordoubletree/substore.js` | `https://gcore.jsdelivr.net/gh/doubletree6/clashconfigfordoubletree@gh-pages/substore.js` |
+| `clash.yaml` | Clash 配置 | `https://doubletree6.github.io/clashconfigfordoubletree/clash.yaml` | `https://gcore.jsdelivr.net/gh/doubletree6/clashconfigfordoubletree@gh-pages/clash.yaml` |
+
+> 💡 **推荐使用 jsdelivr CDN**，国内访问更快更稳定
 
 ## 使用方法
 
@@ -15,12 +17,18 @@
 
 1. 打开 Substore App
 2. 添加订阅 → 选择「脚本」类型
-3. URL 填写：`https://<username>.github.io/clashconfigfordoubletree/substore.js`
+3. URL 填写：
+   ```
+   https://gcore.jsdelivr.net/gh/doubletree6/clashconfigfordoubletree@gh-pages/substore.js
+   ```
 
 ### Clash 客户端
 
 1. Clash → 配置 → 远程配置
-2. URL 填写：`https://<username>.github.io/clashconfigfordoubletree/clash.yaml`
+2. URL 填写：
+   ```
+   https://gcore.jsdelivr.net/gh/doubletree6/clashconfigfordoubletree@gh-pages/clash.yaml
+   ```
 
 ## 自定义规则
 
@@ -29,7 +37,7 @@
 | 文件 | 说明 |
 |------|------|
 | `rules/bypass.txt` | 直连规则 |
-| `rules/custom.txt` | 自定义规则 |
+| `rules/custom.txt` | 手动切换规则 |
 | `rules/proxy.txt` | 代理规则 |
 
 ### 规则格式
@@ -62,7 +70,6 @@ PROCESS-NAME,WeChat,DIRECT
 | 🇺🇲 美国节点 | url-test | 美国节点组 |
 | 🇨🇳 台湾节点 | url-test | 台湾节点组 |
 | 🇸🇬 狮城节点 | url-test | 新加坡节点组 |
-| 🪩Frpservice | select | 自定义服务 |
 | 🐟 兜底分流 | select | 兜底策略 |
 
 ## Substore 参数
@@ -88,9 +95,6 @@ https://...substore.js#landing=true&ipv6=true
 # 克隆仓库
 git clone https://github.com/doubletree6/clashconfigfordoubletree.git
 cd clashconfigfordoubletree
-
-# 安装依赖（可选）
-npm install
 
 # 本地构建
 node scripts/build.js
