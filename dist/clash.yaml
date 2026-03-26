@@ -1,5 +1,6 @@
 # Clash 配置文件
 # 基于 powerfullz/override-rules，由 build.js 自动生成
+# 使用方式：将 YOUR_SUBSCRIPTION_URL 替换为你的订阅地址
 
 port: 7890
 socks-port: 7891
@@ -16,12 +17,23 @@ dns:
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+    - "+.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.xboxlive.com"
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
   fallback:
     - https://cloudflare-dns.com/dns-query
     - https://dns.google/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
 
 proxy-providers:
   Subscribe:
@@ -37,7 +49,11 @@ proxy-providers:
 proxies: null
 
 proxy-groups:
-  - name: 🚀 手动切换
+  - name: 选择代理
+    type: select
+    use:
+      - Subscribe
+  - name: 手动选择
     type: select
     use:
       - Subscribe
@@ -48,57 +64,87 @@ proxy-groups:
     interval: 900
     use:
       - Subscribe
-  - name: 🌏 全球加速
+  - name: 故障转移
+    type: fallback
+    url: http://www.gstatic.com/generate_204
+    interval: 180
+    use:
+      - Subscribe
+  - name: 静态资源
+    type: select
+    use:
+      - Subscribe
+  - name: AI
+    type: select
+    use:
+      - Subscribe
+  - name: Crypto
+    type: select
+    use:
+      - Subscribe
+  - name: Google
+    type: select
+    use:
+      - Subscribe
+  - name: Microsoft
+    type: select
+    use:
+      - Subscribe
+  - name: YouTube
+    type: select
+    use:
+      - Subscribe
+  - name: Bilibili
+    type: select
+    use:
+      - Subscribe
+  - name: Netflix
+    type: select
+    use:
+      - Subscribe
+  - name: TikTok
+    type: select
+    use:
+      - Subscribe
+  - name: Spotify
+    type: select
+    use:
+      - Subscribe
+  - name: E-Hentai
+    type: select
+    use:
+      - Subscribe
+  - name: Telegram
+    type: select
+    use:
+      - Subscribe
+  - name: OneDrive
+    type: select
+    use:
+      - Subscribe
+  - name: PikPak
+    type: select
+    use:
+      - Subscribe
+  - name: SSH(22端口)
+    type: select
+    use:
+      - Subscribe
+  - name: 搜狗输入法
     type: select
     proxies:
-      - ♻️ 自动选择
-      - 🚀 手动切换
       - DIRECT
-  - name: 🇭🇰 香港节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "港|HK|(?i)Hong"
-  - name: 🇯🇵 日本节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "日|东京|JP|(?i)Japan"
-  - name: 🇺🇲 美国节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "美|US|(?i)States|American"
-  - name: 🇨🇳 台湾节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "台|湾|TW|(?i)Taiwan"
-  - name: 🇸🇬 狮城节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "新|坡|SG|(?i)Singapore"
-  - name: 🐟 兜底分流
+      - REJECT
+  - name: 直连
     type: select
     proxies:
-      - ♻️ 自动选择
-      - 🚀 手动切换
+      - DIRECT
+      - 选择代理
+  - name: 广告拦截
+    type: select
+    proxies:
+      - REJECT
+      - REJECT-DROP
       - DIRECT
 
 rule-providers:
@@ -153,23 +199,23 @@ rules:
   - PROCESS-NAME,docker,DIRECT
   - PROCESS-NAME,WeChat,DIRECT
   - PROCESS-NAME,zotero,DIRECT
-  - DOMAIN-KEYWORD,generativelanguage,🚀 手动切换
-  - DOMAIN-KEYWORD,ohmygpt,🚀 手动切换
-  - DOMAIN-KEYWORD,intlgame,🚀 手动切换
-  - DOMAIN-KEYWORD,nikke,🚀 手动切换
-  - DOMAIN-KEYWORD,mtalk,🚀 手动切换
-  - DOMAIN-KEYWORD,aistudio,🌏 全球加速
-  - DOMAIN-KEYWORD,huggingface,🌏 全球加速
-  - DOMAIN-KEYWORD,google,🇸🇬 狮城节点
-  - DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点
-  - DOMAIN-KEYWORD,copilot,🌏 全球加速
-  - DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点
-  - DOMAIN-KEYWORD,cline,🇯🇵 日本节点
-  - DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点
+  - DOMAIN-KEYWORD,generativelanguage,手动选择
+  - DOMAIN-KEYWORD,ohmygpt,手动选择
+  - DOMAIN-KEYWORD,intlgame,手动选择
+  - DOMAIN-KEYWORD,nikke,手动选择
+  - DOMAIN-KEYWORD,mtalk,手动选择
+  - DOMAIN-KEYWORD,aistudio,选择代理
+  - DOMAIN-KEYWORD,huggingface,选择代理
+  - DOMAIN-KEYWORD,google,手动选择
+  - DOMAIN-KEYWORD,googleapis,手动选择
+  - DOMAIN-KEYWORD,copilot,选择代理
+  - DOMAIN-KEYWORD,edisonscientific,手动选择
+  - DOMAIN-KEYWORD,cline,手动选择
+  - DOMAIN-SUFFIX,apple-relay.apple.com,手动选择
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Lan,DIRECT
-  - RULE-SET,Ad,REJECT
-  - RULE-SET,ProxyLite,🌏 全球加速
+  - RULE-SET,Ad,广告拦截
+  - RULE-SET,ProxyLite,手动选择
   - RULE-SET,ChinaIP,DIRECT
   - GEOIP,CN,DIRECT
-  - MATCH,🐟 兜底分流
+  - MATCH,选择代理

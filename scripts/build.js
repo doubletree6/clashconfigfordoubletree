@@ -88,27 +88,12 @@ function injectModifications(baseScript, extraRules) {
   );
   
   // 3. 在 main 函数中：
-  //    - 在构建完策略组后，添加 AUTO_SELECT 策略组（包含所有节点）
+  //    - 在构建完策略组后，添加 AUTO_SELECT 策略组
   //    - 注入额外规则
     
-  // 找到：g=d.map(e=>e.name);d.push({name:"GLOBAL"
-  // 在之前插入 AUTO_SELECT 构建逻辑
-  const autoSelectCode = `
-  // ========== 自定义扩展：添加 ♻️ 自动选择策略组 ==========
-  const allNodeNames = (e.proxies || []).map(p => p.name);
-  if (allNodeNames.length > 0) {
-    d.splice(2, 0, {
-      name: PROXY_GROUPS.AUTO_SELECT,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speed.png",
-      type: "url-test",
-      url: "https://cp.cloudflare.com/generate_204",
-      interval: 900,
-      lazy: true,
-      proxies: allNodeNames
-    });
-  }
-  // ========== 自定义扩展结束 ==========
-  `;
+  // 使用 include-all: true，让 Substore 自动填充所有节点
+  // 这是 Substore 特性，原始 Clash 不支持，但 Substore 会在输出时展开
+  const autoSelectCode = `d.splice(2,0,{name:PROXY_GROUPS.AUTO_SELECT,icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speed.png","include-all":!0,type:"url-test",url:"https://cp.cloudflare.com/generate_204",interval:900,lazy:!0});`;
   
   script = script.replace(
     /g=d\.map\(e=>e\.name\);d\.push\(\{name:"GLOBAL"/,
@@ -130,10 +115,29 @@ function generateClashYAML(extraRules) {
   const customRules = readRulesFile('custom.txt');
   const proxyRules = readRulesFile('proxy.txt');
   
-  const allExtraRules = [...bypassRules, ...customRules, ...proxyRules];
+  // 替换规则中的策略组名称以匹配 clash.yaml
+  const policyNameMap = {
+    '🚀 手动切换': '手动选择',
+    '🌏 全球加速': '选择代理',
+    '🇸🇬 狮城节点': '手动选择',
+    '🇺🇲 美国节点': '手动选择',
+    '🇯🇵 日本节点': '手动选择'
+  };
+  
+  const mappedRules = [...bypassRules, ...customRules, ...proxyRules].map(rule => {
+    let mappedRule = rule;
+    for (const [oldName, newName] of Object.entries(policyNameMap)) {
+      if (rule.endsWith(oldName)) {
+        mappedRule = rule.replace(oldName, newName);
+        break;
+      }
+    }
+    return mappedRule;
+  });
   
   return `# Clash 配置文件
 # 基于 powerfullz/override-rules，由 build.js 自动生成
+# 使用方式：将 YOUR_SUBSCRIPTION_URL 替换为你的订阅地址
 
 port: 7890
 socks-port: 7891
@@ -150,12 +154,23 @@ dns:
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+    - "+.srv.nintendo.net"
+    - "+.stun.playstation.net"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "+.xboxlive.com"
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
   fallback:
     - https://cloudflare-dns.com/dns-query
     - https://dns.google/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
 
 proxy-providers:
   Subscribe:
@@ -171,7 +186,11 @@ proxy-providers:
 proxies: null
 
 proxy-groups:
-  - name: 🚀 手动切换
+  - name: 选择代理
+    type: select
+    use:
+      - Subscribe
+  - name: 手动选择
     type: select
     use:
       - Subscribe
@@ -182,57 +201,87 @@ proxy-groups:
     interval: 900
     use:
       - Subscribe
-  - name: 🌏 全球加速
+  - name: 故障转移
+    type: fallback
+    url: http://www.gstatic.com/generate_204
+    interval: 180
+    use:
+      - Subscribe
+  - name: 静态资源
+    type: select
+    use:
+      - Subscribe
+  - name: AI
+    type: select
+    use:
+      - Subscribe
+  - name: Crypto
+    type: select
+    use:
+      - Subscribe
+  - name: Google
+    type: select
+    use:
+      - Subscribe
+  - name: Microsoft
+    type: select
+    use:
+      - Subscribe
+  - name: YouTube
+    type: select
+    use:
+      - Subscribe
+  - name: Bilibili
+    type: select
+    use:
+      - Subscribe
+  - name: Netflix
+    type: select
+    use:
+      - Subscribe
+  - name: TikTok
+    type: select
+    use:
+      - Subscribe
+  - name: Spotify
+    type: select
+    use:
+      - Subscribe
+  - name: E-Hentai
+    type: select
+    use:
+      - Subscribe
+  - name: Telegram
+    type: select
+    use:
+      - Subscribe
+  - name: OneDrive
+    type: select
+    use:
+      - Subscribe
+  - name: PikPak
+    type: select
+    use:
+      - Subscribe
+  - name: SSH(22端口)
+    type: select
+    use:
+      - Subscribe
+  - name: 搜狗输入法
     type: select
     proxies:
-      - ♻️ 自动选择
-      - 🚀 手动切换
       - DIRECT
-  - name: 🇭🇰 香港节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "港|HK|(?i)Hong"
-  - name: 🇯🇵 日本节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "日|东京|JP|(?i)Japan"
-  - name: 🇺🇲 美国节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "美|US|(?i)States|American"
-  - name: 🇨🇳 台湾节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "台|湾|TW|(?i)Taiwan"
-  - name: 🇸🇬 狮城节点
-    type: url-test
-    lazy: true
-    url: http://www.gstatic.com/generate_204
-    interval: 900
-    use:
-      - Subscribe
-    filter: "新|坡|SG|(?i)Singapore"
-  - name: 🐟 兜底分流
+      - REJECT
+  - name: 直连
     type: select
     proxies:
-      - ♻️ 自动选择
-      - 🚀 手动切换
+      - DIRECT
+      - 选择代理
+  - name: 广告拦截
+    type: select
+    proxies:
+      - REJECT
+      - REJECT-DROP
       - DIRECT
 
 rule-providers:
@@ -268,14 +317,14 @@ rule-providers:
     path: ./ruleset/ChinaIP.yaml
 
 rules:
-${allExtraRules.map(r => `  - ${r}`).join('\n')}
+${mappedRules.map(r => `  - ${r}`).join('\n')}
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Lan,DIRECT
-  - RULE-SET,Ad,REJECT
-  - RULE-SET,ProxyLite,🌏 全球加速
+  - RULE-SET,Ad,广告拦截
+  - RULE-SET,ProxyLite,手动选择
   - RULE-SET,ChinaIP,DIRECT
   - GEOIP,CN,DIRECT
-  - MATCH,🐟 兜底分流
+  - MATCH,选择代理
 `;
 }
 
