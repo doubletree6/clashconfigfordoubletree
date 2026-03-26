@@ -4,7 +4,7 @@
  * 基于 powerfullz/override-rules 构建，注入自定义修改
  * 
  * 修改内容：
- * 1. 添加「♻️ 自动选择」策略组
+ * 1. 添加「♻️ 自动选择」策略组（在 main 函数中动态构建，包含所有节点）
  * 2. 注入额外规则（从 rules/*.txt 读取）
  */
 
@@ -73,40 +73,49 @@ function injectModifications(baseScript, extraRules) {
   let script = baseScript;
   
   // 1. 在 PROXY_GROUPS 定义中添加 AUTO_SELECT
-  // 原始: const PROXY_GROUPS={SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点"}
   script = script.replace(
     /const PROXY_GROUPS=\{SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点"\}/,
     'const PROXY_GROUPS={SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点",AUTO_SELECT:"♻️ 自动选择"}'
   );
   
-  // 2. 在 buildProxyGroups 函数返回的数组中，在 MANUAL 后面插入 AUTO_SELECT 策略组
-  // 原始: {name:PROXY_GROUPS.MANUAL,...type:"select"},e?{name:"前置代理"
-  // 修改: {name:PROXY_GROUPS.MANUAL,...type:"select"},{name:PROXY_GROUPS.AUTO_SELECT,...},e?{name:"前置代理"
-  const autoSelectGroup = `{name:PROXY_GROUPS.AUTO_SELECT,icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speed.png","include-all":!0,type:"url-test",url:"https://cp.cloudflare.com/generate_204",interval:900,lazy:!0},`;
-  
-  // 在 MANUAL 定义后插入（原始脚本是压缩的，格式固定）
-  // 注意：原始代码 MANUAL 后面直接跟着条件表达式 e?{name:"前置代理"
-  script = script.replace(
-    /\{name:PROXY_GROUPS\.MANUAL,icon:"https:\/\/gcore\.jsdelivr\.net\/gh\/shindgewongxj\/WHATSINStash@master\/icon\/select\.png","include-all":!0,type:"select"\},e\?/,
-    `{name:PROXY_GROUPS.MANUAL,icon:"https://gcore.jsdelivr.net/gh/shindgewongxj/WHATSINStash@master/icon/select.png","include-all":!0,type:"select"},${autoSelectGroup}e?`
-  );
-  
-  // 3. 在 main 函数中注入额外规则
-  // 找到 buildRules 调用，在其后注入规则处理逻辑
-  // 原始: const h=buildRules({quicEnabled:quicEnabled});
-  // 修改为: const h=buildRules({quicEnabled:quicEnabled});const matchRule=h.pop();h.push(...EXTRA_RULES);h.push(matchRule);
-  
-  // 先定义 EXTRA_RULES
+  // 2. 定义 EXTRA_RULES（在参数解析后）
   const extraRulesArray = extraRules.map(r => `"${r}"`).join(',');
   const extraRulesCode = `const EXTRA_RULES=[${extraRulesArray}];`;
   
-  // 在 script 开头添加 EXTRA_RULES 定义（在参数解析后）
   script = script.replace(
     /(countryThreshold:countryThreshold\}=buildFeatureFlags\(rawArgs\);)/,
     `$1${extraRulesCode}`
   );
   
-  // 修改 buildRules 后的处理
+  // 3. 在 main 函数中：
+  //    - 在构建完策略组后，添加 AUTO_SELECT 策略组（包含所有节点）
+  //    - 注入额外规则
+    
+  // 找到：g=d.map(e=>e.name);d.push({name:"GLOBAL"
+  // 在之前插入 AUTO_SELECT 构建逻辑
+  const autoSelectCode = `
+  // ========== 自定义扩展：添加 ♻️ 自动选择策略组 ==========
+  const allNodeNames = (e.proxies || []).map(p => p.name);
+  if (allNodeNames.length > 0) {
+    d.splice(2, 0, {
+      name: PROXY_GROUPS.AUTO_SELECT,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speed.png",
+      type: "url-test",
+      url: "https://cp.cloudflare.com/generate_204",
+      interval: 900,
+      lazy: true,
+      proxies: allNodeNames
+    });
+  }
+  // ========== 自定义扩展结束 ==========
+  `;
+  
+  script = script.replace(
+    /g=d\.map\(e=>e\.name\);d\.push\(\{name:"GLOBAL"/,
+    `${autoSelectCode}g=d.map(e=>e.name);d.push({name:"GLOBAL"`
+  );
+  
+  // 4. 注入额外规则（在 MATCH 之前）
   script = script.replace(
     /const h=buildRules\(\{quicEnabled:quicEnabled\}\);/,
     'const h=buildRules({quicEnabled:quicEnabled});const matchRule=h.pop();h.push(...EXTRA_RULES);h.push(matchRule);'
@@ -117,7 +126,6 @@ function injectModifications(baseScript, extraRules) {
 
 // ========== 生成 Clash YAML ==========
 function generateClashYAML(extraRules) {
-  // 读取规则
   const bypassRules = readRulesFile('bypass.txt');
   const customRules = readRulesFile('custom.txt');
   const proxyRules = readRulesFile('proxy.txt');
@@ -289,7 +297,7 @@ async function main() {
   
   // 注入修改
   console.log('\nInjecting modifications...');
-  console.log('  -> Adding AUTO_SELECT proxy group');
+  console.log('  -> Adding AUTO_SELECT proxy group (dynamic, includes all nodes)');
   console.log('  -> Injecting extra rules');
   const modifiedScript = injectModifications(baseScript, extraRules);
   
