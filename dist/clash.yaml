@@ -1,5 +1,5 @@
 # Clash 配置文件
-# 由 build.js 自动生成
+# 基于 powerfullz/override-rules，由 build.js 自动生成
 
 port: 7890
 socks-port: 7891

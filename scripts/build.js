@@ -1,21 +1,27 @@
 #!/usr/bin/env node
 /**
  * Clash Config Builder
- * 生成 substore.js 和 clash.yaml
+ * 基于 powerfullz/override-rules 构建，注入自定义修改
+ * 
+ * 修改内容：
+ * 1. 添加「♻️ 自动选择」策略组
+ * 2. 注入额外规则（从 rules/*.txt 读取）
  */
 
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
-// 读取规则文件
+// ========== 配置 ==========
+const BASE_URL = 'https://gcore.jsdelivr.net/gh/powerfullz/override-rules@refs/heads/main/convert.min.js';
+const OUTPUT_DIR = path.join(__dirname, '..', 'dist');
+
+// ========== 读取规则文件 ==========
 function readRulesFile(filename) {
   const rulesDir = path.join(__dirname, '..', 'rules');
   const filePath = path.join(rulesDir, filename);
   
-  if (!fs.existsSync(filePath)) {
-    console.log(`Warning: ${filename} not found, skipping`);
-    return [];
-  }
+  if (!fs.existsSync(filePath)) return [];
   
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
@@ -24,8 +30,6 @@ function readRulesFile(filename) {
     .map(line => line.trim())
     .filter(line => line && !line.startsWith('#'))
     .map(line => {
-      // 解析格式: RULE,value,policy
-      // 支持多种 value 中可能有逗号的情况，最后一个逗号后面是 policy
       const lastComma = line.lastIndexOf(',');
       if (lastComma === -1) return null;
       
@@ -38,38 +42,90 @@ function readRulesFile(filename) {
       const ruleType = rulePart.slice(0, firstComma).trim();
       const value = rulePart.slice(firstComma + 1).trim();
       
-      return {
-        type: ruleType,
-        value: value,
-        policy: policy,
-        raw: line
-      };
+      return `${ruleType},${value},${policy}`;
     })
     .filter(Boolean);
 }
 
-// 生成 substore.js
-function generateSubstoreJS(clashRules) {
-  const templatePath = path.join(__dirname, 'substore.template.js');
-  let template = fs.readFileSync(templatePath, 'utf-8');
-  
-  // 替换 EXTRA_RULES 占位符
-  const rulesArray = clashRules.map(r => `  "${r}"`).join(',\n');
-  const extraRulesCode = `const EXTRA_RULES = [\n${rulesArray}\n];`;
-  
-  template = template.replace(
-    /const EXTRA_RULES = \[[\s\S]*?\];/,
-    extraRulesCode
-  );
-  
-  return template;
+// ========== 获取基准脚本 ==========
+function fetchBaseScript() {
+  return new Promise((resolve, reject) => {
+    console.log('Fetching base script from powerfullz/override-rules...');
+    
+    https.get(BASE_URL, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+      
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        console.log(`  -> Downloaded ${data.length} bytes`);
+        resolve(data);
+      });
+    }).on('error', reject);
+  });
 }
 
-// 生成 clash.yaml
-function generateClashYAML(clashRules) {
-  // YAML 配置模板
+// ========== 注入修改 ==========
+function injectModifications(baseScript, extraRules) {
+  let script = baseScript;
+  
+  // 1. 在 PROXY_GROUPS 定义中添加 AUTO_SELECT
+  // 原始: const PROXY_GROUPS={SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点"}
+  script = script.replace(
+    /const PROXY_GROUPS=\{SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点"\}/,
+    'const PROXY_GROUPS={SELECT:"选择代理",MANUAL:"手动选择",FALLBACK:"故障转移",DIRECT:"直连",LANDING:"落地节点",LOW_COST:"低倍率节点",AUTO_SELECT:"♻️ 自动选择"}'
+  );
+  
+  // 2. 在 buildProxyGroups 函数返回的数组中，在 MANUAL 后面插入 AUTO_SELECT 策略组
+  // 原始: {name:PROXY_GROUPS.MANUAL,...type:"select"},e?{name:"前置代理"
+  // 修改: {name:PROXY_GROUPS.MANUAL,...type:"select"},{name:PROXY_GROUPS.AUTO_SELECT,...},e?{name:"前置代理"
+  const autoSelectGroup = `{name:PROXY_GROUPS.AUTO_SELECT,icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speed.png","include-all":!0,type:"url-test",url:"https://cp.cloudflare.com/generate_204",interval:900,lazy:!0},`;
+  
+  // 在 MANUAL 定义后插入（原始脚本是压缩的，格式固定）
+  // 注意：原始代码 MANUAL 后面直接跟着条件表达式 e?{name:"前置代理"
+  script = script.replace(
+    /\{name:PROXY_GROUPS\.MANUAL,icon:"https:\/\/gcore\.jsdelivr\.net\/gh\/shindgewongxj\/WHATSINStash@master\/icon\/select\.png","include-all":!0,type:"select"\},e\?/,
+    `{name:PROXY_GROUPS.MANUAL,icon:"https://gcore.jsdelivr.net/gh/shindgewongxj/WHATSINStash@master/icon/select.png","include-all":!0,type:"select"},${autoSelectGroup}e?`
+  );
+  
+  // 3. 在 main 函数中注入额外规则
+  // 找到 buildRules 调用，在其后注入规则处理逻辑
+  // 原始: const h=buildRules({quicEnabled:quicEnabled});
+  // 修改为: const h=buildRules({quicEnabled:quicEnabled});const matchRule=h.pop();h.push(...EXTRA_RULES);h.push(matchRule);
+  
+  // 先定义 EXTRA_RULES
+  const extraRulesArray = extraRules.map(r => `"${r}"`).join(',');
+  const extraRulesCode = `const EXTRA_RULES=[${extraRulesArray}];`;
+  
+  // 在 script 开头添加 EXTRA_RULES 定义（在参数解析后）
+  script = script.replace(
+    /(countryThreshold:countryThreshold\}=buildFeatureFlags\(rawArgs\);)/,
+    `$1${extraRulesCode}`
+  );
+  
+  // 修改 buildRules 后的处理
+  script = script.replace(
+    /const h=buildRules\(\{quicEnabled:quicEnabled\}\);/,
+    'const h=buildRules({quicEnabled:quicEnabled});const matchRule=h.pop();h.push(...EXTRA_RULES);h.push(matchRule);'
+  );
+  
+  return script;
+}
+
+// ========== 生成 Clash YAML ==========
+function generateClashYAML(extraRules) {
+  // 读取规则
+  const bypassRules = readRulesFile('bypass.txt');
+  const customRules = readRulesFile('custom.txt');
+  const proxyRules = readRulesFile('proxy.txt');
+  
+  const allExtraRules = [...bypassRules, ...customRules, ...proxyRules];
+  
   return `# Clash 配置文件
-# 由 build.js 自动生成
+# 基于 powerfullz/override-rules，由 build.js 自动生成
 
 port: 7890
 socks-port: 7891
@@ -204,7 +260,7 @@ rule-providers:
     path: ./ruleset/ChinaIP.yaml
 
 rules:
-${clashRules.map(r => `  - ${r}`).join('\n')}
+${allExtraRules.map(r => `  - ${r}`).join('\n')}
   - RULE-SET,Direct,DIRECT
   - RULE-SET,Lan,DIRECT
   - RULE-SET,Ad,REJECT
@@ -215,50 +271,54 @@ ${clashRules.map(r => `  - ${r}`).join('\n')}
 `;
 }
 
-// 主函数
-function build() {
-  console.log('Building clash config...');
+// ========== 主函数 ==========
+async function main() {
+  console.log('Building clash config...\n');
   
-  // 读取所有规则
+  // 读取规则
   const bypassRules = readRulesFile('bypass.txt');
   const customRules = readRulesFile('custom.txt');
   const proxyRules = readRulesFile('proxy.txt');
+  const extraRules = [...bypassRules, ...customRules, ...proxyRules];
   
   console.log(`Loaded rules: bypass=${bypassRules.length}, custom=${customRules.length}, proxy=${proxyRules.length}`);
+  console.log(`Total extra rules: ${extraRules.length}\n`);
   
-  // 合并规则（按顺序：bypass -> custom -> proxy）
-  const allExtraRules = [...bypassRules, ...customRules, ...proxyRules];
+  // 获取基准脚本
+  const baseScript = await fetchBaseScript();
   
-  // 生成 Clash 格式规则
-  const clashRules = allExtraRules.map(r => `${r.type},${r.value},${r.policy}`);
+  // 注入修改
+  console.log('\nInjecting modifications...');
+  console.log('  -> Adding AUTO_SELECT proxy group');
+  console.log('  -> Injecting extra rules');
+  const modifiedScript = injectModifications(baseScript, extraRules);
   
   // 确保输出目录存在
-  const distDir = path.join(__dirname, '..', 'dist');
-  fs.mkdirSync(distDir, { recursive: true });
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   
-  // 生成 substore.js
-  console.log('\nGenerating substore.js...');
-  const substoreJS = generateSubstoreJS(clashRules);
-  fs.writeFileSync(path.join(distDir, 'substore.js'), substoreJS);
-  console.log(`  -> dist/substore.js (${substoreJS.length} bytes)`);
+  // 输出 substore.js
+  const substorePath = path.join(OUTPUT_DIR, 'substore.js');
+  fs.writeFileSync(substorePath, modifiedScript);
+  console.log(`\n✅ Generated: ${substorePath} (${modifiedScript.length} bytes)`);
   
-  // 生成 clash.yaml
-  console.log('\nGenerating clash.yaml...');
-  const clashYAML = generateClashYAML(clashRules);
-  fs.writeFileSync(path.join(distDir, 'clash.yaml'), clashYAML);
-  console.log(`  -> dist/clash.yaml (${clashYAML.length} bytes)`);
+  // 输出 clash.yaml
+  const yamlContent = generateClashYAML(extraRules);
+  const yamlPath = path.join(OUTPUT_DIR, 'clash.yaml');
+  fs.writeFileSync(yamlPath, yamlContent);
+  console.log(`✅ Generated: ${yamlPath} (${yamlContent.length} bytes)`);
   
   // 保存规则 JSON（调试用）
-  fs.writeFileSync(path.join(distDir, 'extra-rules.json'), JSON.stringify({
-    total: allExtraRules.length,
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'extra-rules.json'), JSON.stringify({
+    total: extraRules.length,
     bypass: bypassRules,
     custom: customRules,
-    proxy: proxyRules,
-    clashRules: clashRules
+    proxy: proxyRules
   }, null, 2));
   
   console.log('\n✅ Build complete!');
-  console.log(`Total extra rules: ${clashRules.length}`);
 }
 
-build();
+main().catch(err => {
+  console.error('Build failed:', err);
+  process.exit(1);
+});
