@@ -1,4 +1,16 @@
 # 代理规则列表
 # 格式: RULE,策略组
 
-# (暂无代理规则)
+# AI 相关
+DOMAIN-KEYWORD,aistudio,🌏 全球加速
+DOMAIN-KEYWORD,huggingface,🌏 全球加速
+
+# Google 服务
+DOMAIN-KEYWORD,google,🇸🇬 狮城节点
+DOMAIN-KEYWORD,googleapis,🇸🇬 狮城节点
+DOMAIN-KEYWORD,copilot,🌏 全球加速
+
+# 国家节点
+DOMAIN-KEYWORD,edisonscientific,🇺🇲 美国节点
+DOMAIN-KEYWORD,cline,🇯🇵 日本节点
+DOMAIN-SUFFIX,apple-relay.apple.com,🇺🇲 美国节点
