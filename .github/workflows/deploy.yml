@@ -1,0 +1,50 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch base config
+        run: |
+          curl -sL "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@refs/heads/main/convert.min.js" -o scripts/base.js
+          echo "Downloaded base.js ($(wc -c < scripts/base.js) bytes)"
+
+      - name: Build
+        run: |
+          node scripts/build.js
+
+      - name: Verify outputs
+        run: |
+          echo "=== substore.js ==="
+          head -20 dist/substore.js
+          echo ""
+          echo "=== clash.yaml ==="
+          head -30 dist/clash.yaml
+          echo ""
+          echo "=== File sizes ==="
+          ls -la dist/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
+          enable_jekyll: false
